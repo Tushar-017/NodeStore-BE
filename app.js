@@ -1,3 +1,4 @@
+require("dotenv").config();
 const path = require("path");
 
 const { v4: uuidv4 } = require("uuid");
@@ -56,13 +57,12 @@ app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode || 500;
   const message = error.message;
-  res.status(status).json({ message: message });
+  const data = error.data;
+  res.status(status).json({ message: message, data: data });
 });
 
 mongoose
-  .connect(
-    "mongodb+srv://tusharN2025:Lnkm7C36q2gcN3QR@cluster0.mzcrxxm.mongodb.net/messages?retryWrites=true&w=majority&appName=Cluster0"
-  )
+  .connect(process.env.MONGODB_URI)
   .then((result) => {
     app.listen(8080);
   })
